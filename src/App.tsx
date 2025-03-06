@@ -1,31 +1,29 @@
 import { data } from './data/vegetables';
-import { useState } from 'react';
-import { FoodItem, SelectedFoodItem } from './types/food';
+import { useEffect, useState } from 'react';
+import { FoodItem } from './types/food';
 
 function App() {
   const [foodItems, setFoodItems] = useState<FoodItem[]>(data);
-  const [selectedVegetable, setSelectedVegetable] = useState<SelectedFoodItem>({
-    fruits: [],
-    vegetables: [],
-  });
+  const [selectedVegetable, setSelectedVegetable] = useState<FoodItem[]>([]);
 
   const handleFoodSelection = (food: FoodItem) => {
     setFoodItems((prev) => prev.filter((item) => item.name !== food.name));
-
-    if (food?.type === 'Fruit') {
-      setSelectedVegetable((prev) => ({
-        ...prev,
-        fruits: [...prev.fruits, food],
-      }));
-    }
-
-    if (food?.type === 'Vegetable') {
-      setSelectedVegetable((prev) => ({
-        ...prev,
-        vegetables: [...prev.vegetables, food],
-      }));
-    }
+    setSelectedVegetable((prev) => [...prev, food]);
   };
+
+  const autoDelete = () => {
+    setSelectedVegetable((prev) => prev.slice(1));
+    setFoodItems((prev) => [...prev, selectedVegetable[0]]);
+  };
+
+  useEffect(() => {
+    if (selectedVegetable.length === 0) return;
+
+    const timer = setTimeout(() => autoDelete(), 5000);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVegetable]);
 
   return (
     <>
@@ -47,14 +45,16 @@ function App() {
             Fruits
           </h2>
 
-          {selectedVegetable?.fruits?.map((fruit) => (
-            <div
-              className='text-center p-2 border border-gray-200 m-2'
-              key={fruit?.name}
-            >
-              {fruit?.name}
-            </div>
-          ))}
+          {selectedVegetable
+            .filter((item) => item?.type === 'Fruit')
+            .map((fruit) => (
+              <div
+                className='text-center p-2 border border-gray-200 m-2'
+                key={fruit?.name}
+              >
+                {fruit?.name}
+              </div>
+            ))}
         </section>
 
         <section className='container-vegetable border border-gray-200'>
@@ -62,14 +62,16 @@ function App() {
             Vegetables
           </h2>
 
-          {selectedVegetable?.vegetables?.map((vegetable) => (
-            <div
-              className='text-center p-2 border border-gray-200 m-2'
-              key={vegetable?.name}
-            >
-              {vegetable?.name}
-            </div>
-          ))}
+          {selectedVegetable
+            .filter((item) => item?.type === 'Vegetable')
+            .map((vegetable) => (
+              <div
+                className='text-center p-2 border border-gray-200 m-2'
+                key={vegetable?.name}
+              >
+                {vegetable?.name}
+              </div>
+            ))}
         </section>
       </main>
     </>
