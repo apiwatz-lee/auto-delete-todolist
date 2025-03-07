@@ -23,14 +23,16 @@ function App() {
       const interval = setInterval(() => {
         setSelectedFoods((prevFoods) =>
           prevFoods.filter(
-            (item) => Math.abs(item.timeStamp - Date.now()) <= 5000
+            (item) =>
+              item?.timeStamp && Math.abs(item?.timeStamp - Date.now()) <= 5000
           )
         );
 
         setFoodItems((prevFoods) => [
           ...prevFoods,
           ...selectedFoods.filter(
-            (item) => Math.abs(item.timeStamp - Date.now()) > 5000
+            (item) =>
+              item?.timeStamp && Math.abs(item.timeStamp - Date.now()) > 5000
           ),
         ]);
       }, 500);
