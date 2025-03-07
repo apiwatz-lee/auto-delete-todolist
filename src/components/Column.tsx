@@ -21,7 +21,7 @@ const Column: React.FC<Props> = ({ label, selectedList, type, onRemove }) => {
           .map((fruit) => (
             <button
               className='text-center p-2 border border-gray-200 w-full cursor-pointer hover:bg-gray-50'
-              key={fruit?.name}
+              key={fruit?.timeStamp}
               onClick={() => onRemove(fruit)}
             >
               {fruit?.name}
