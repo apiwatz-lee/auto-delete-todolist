@@ -10,20 +10,22 @@ function App() {
 
   const handleFoodSelection = (food: FoodItem) => {
     setFoodItems((prev) => prev.filter((item) => item.name !== food.name));
-    setSelectedFoods((prev) => [...prev, food]);
-  };
-
-  const autoDelete = () => {
-    setSelectedFoods((prev) => prev.slice(1));
-    setFoodItems((prev) => [...prev, selectedFoods[0]]);
+    setSelectedFoods((prev) => [...prev, { ...food, timeStamp: Date.now() }]);
   };
 
   useEffect(() => {
-    if (selectedFoods.length === 0) return;
+    if (selectedFoods.length > 0) {
+      const interval = setInterval(() => {
+        setSelectedFoods((prevFoods) =>
+          prevFoods.filter(
+            (item) => Math.abs(item.timeStamp - Date.now()) <= 5000
+          )
+        );
+      }, 500);
 
-    const timer = setTimeout(() => autoDelete(), 5000);
+      return () => clearInterval(interval);
+    }
 
-    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFoods]);
 
