@@ -21,6 +21,13 @@ function App() {
             (item) => Math.abs(item.timeStamp - Date.now()) <= 5000
           )
         );
+
+        setFoodItems((prevFoods) => [
+          ...prevFoods,
+          ...selectedFoods.filter(
+            (item) => Math.abs(item.timeStamp - Date.now()) > 5000
+          ),
+        ]);
       }, 500);
 
       return () => clearInterval(interval);
