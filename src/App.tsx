@@ -13,6 +13,11 @@ function App() {
     setSelectedFoods((prev) => [...prev, { ...food, timeStamp: Date.now() }]);
   };
 
+  const handleRemoveFood = (food: FoodItem): void => {
+    setSelectedFoods((prev) => prev.filter((item) => item.name !== food.name));
+    setFoodItems((prev) => [...prev, food]);
+  };
+
   useEffect(() => {
     if (selectedFoods.length > 0) {
       const interval = setInterval(() => {
@@ -40,11 +45,17 @@ function App() {
     <>
       <main className='container mx-auto  grid grid-cols-3 gap-1 h-screen p-4 '>
         <List dataList={foodItems} onSelect={handleFoodSelection} />
-        <Column label='Fruits' selectedList={selectedFoods} type='Fruit' />
+        <Column
+          label='Fruits'
+          selectedList={selectedFoods}
+          type='Fruit'
+          onRemove={handleRemoveFood}
+        />
         <Column
           label='Vegetables'
           selectedList={selectedFoods}
           type='Vegetable'
+          onRemove={handleRemoveFood}
         />
       </main>
     </>

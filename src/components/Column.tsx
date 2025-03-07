@@ -5,9 +5,10 @@ interface Props {
   label: string;
   selectedList: FoodItem[];
   type: string;
+  onRemove: (food: FoodItem) => void;
 }
 
-const Column: React.FC<Props> = ({ label, selectedList, type }) => {
+const Column: React.FC<Props> = ({ label, selectedList, type, onRemove }) => {
   return (
     <section className='container-fruits border border-gray-200 w-full'>
       <h2 className='border border-gray-200 bg-gray-100 text-center p-2 font-semibold'>
@@ -19,8 +20,9 @@ const Column: React.FC<Props> = ({ label, selectedList, type }) => {
           .filter((item) => item?.type === type)
           .map((fruit) => (
             <button
-              className='text-center p-2 border border-gray-200 w-full'
+              className='text-center p-2 border border-gray-200 w-full cursor-pointer hover:bg-gray-50'
               key={fruit?.name}
+              onClick={() => onRemove(fruit)}
             >
               {fruit?.name}
             </button>
